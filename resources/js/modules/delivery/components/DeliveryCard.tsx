@@ -1,9 +1,9 @@
+import { Mail, Pen, Trash } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Pen, Trash } from 'lucide-react';
 
-import { Delivery } from '../types/Delivery';
+import type { Delivery } from '../types/Delivery';
 
 interface DeliveryCardProps {
     delivery: Delivery;

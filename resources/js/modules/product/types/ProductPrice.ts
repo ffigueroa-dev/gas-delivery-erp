@@ -1,4 +1,4 @@
-import { UUID } from "@/types/common";
+import type { UUID } from "@/types/common";
 
 export type PriceType = 'retail' | 'commercial';
 

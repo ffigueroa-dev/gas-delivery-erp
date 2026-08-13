@@ -1,17 +1,17 @@
-import { PriceTypeOption } from '../types/ProductPrice';
-import { Product } from '../types/Product';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { PageHeader } from '@/components/page-header';
+import type { SubmitEvent } from 'react';
 import { TextField } from '@/components/form/text-field';
-import { ProductPricesField } from '../components/ProductPricesField';
+import InputError from '@/components/input-error';
+import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
-import { UpdateProductForm, ProductPriceForm } from '../types/ProductForm';
-import { SubmitEvent } from 'react';
-import { update as updateProduct } from '@/routes/products';
-import { products } from '@/routes';
 import { Field, FieldLabel } from '@/components/ui/field';
 import { Switch } from '@/components/ui/switch';
-import InputError from '@/components/input-error';
+import { products } from '@/routes';
+import { update as updateProduct } from '@/routes/products';
+import { ProductPricesField } from '../components/ProductPricesField';
+import type { Product } from '../types/Product';
+import type { UpdateProductForm, ProductPriceForm } from '../types/ProductForm';
+import type { PriceTypeOption } from '../types/ProductPrice';
 
 type EditPageProps = {
     product: {
@@ -39,6 +39,7 @@ const Edit = ({ product, priceTypes }: EditPageProps) => {
         e.preventDefault();
         form.patch(updateProduct(product.data.id).url);
     };
+
     return (
         <>
             <Head title="Edit Product" />

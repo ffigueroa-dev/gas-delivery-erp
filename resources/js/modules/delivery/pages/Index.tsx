@@ -1,10 +1,10 @@
-import { index as deliveriesRoute } from '@/routes/deliveries';
-import { Delivery } from '../types/Delivery';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { index as deliveriesRoute } from '@/routes/deliveries';
 import { DeliveryCard } from '../components/DeliveryCard';
+import type { Delivery } from '../types/Delivery';
 
 interface IndexPageProps {
     deliveries: {

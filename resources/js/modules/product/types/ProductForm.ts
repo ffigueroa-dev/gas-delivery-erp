@@ -1,5 +1,5 @@
-import { ProductPrice } from "./ProductPrice";
-import { Product } from "./Product";
+import type { Product } from "./Product";
+import type { ProductPrice } from "./ProductPrice";
 
 export type ProductPriceForm = Omit<ProductPrice, 'id' | 'amount'> & {
     amount: string | number;

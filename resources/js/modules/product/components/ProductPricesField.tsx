@@ -3,8 +3,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { PriceType } from "../types/ProductPrice";
-import { ProductPriceForm } from "../types/ProductForm";
+import type { ProductPriceForm } from "../types/ProductForm";
+import type { PriceType } from "../types/ProductPrice";
 
 type PriceTypeOption = {
     value: PriceType;

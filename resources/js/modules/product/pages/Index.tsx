@@ -1,11 +1,11 @@
 import { Head, Link } from '@inertiajs/react';
-import { products as productsRoute } from '@/routes';
-import type { Product } from '../types/Product';
-import { ProductCard } from '../components/ProductCard';
-import { PageHeader } from '@/components/page-header';
 import { Plus } from 'lucide-react';
-import { create as createProduct } from '@/routes/products';
+import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
+import { products as productsRoute } from '@/routes';
+import { create as createProduct } from '@/routes/products';
+import { ProductCard } from '../components/ProductCard';
+import type { Product } from '../types/Product';
 
 interface IndexProps {
     products: {
