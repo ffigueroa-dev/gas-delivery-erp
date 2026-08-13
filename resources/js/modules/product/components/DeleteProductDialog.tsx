@@ -1,3 +1,7 @@
+import { router } from '@inertiajs/react';
+import { AlertTriangle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -6,12 +10,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Product } from '../types/Product';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle } from 'lucide-react';
-import { router } from '@inertiajs/react';
 import { deleteMethod as deleteProduct } from '@/routes/products';
+import type { Product } from '../types/Product';
 
 type DeleteProductDialogProps = {
     isOpen: boolean;
@@ -29,6 +29,7 @@ export const DeleteProductDialog = ({
             onSuccess: (d) => console.log(d),
         });
     };
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent>

@@ -1,14 +1,14 @@
+import { Head, useForm } from '@inertiajs/react';
+import type { SubmitEvent } from 'react';
+import { TextField } from '@/components/form/text-field';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
-import { create as createProductRoute } from '@/routes/products';
-import { Head, useForm } from '@inertiajs/react';
-import { SubmitEvent } from 'react';
-
-import { PriceTypeOption } from '../types/ProductPrice';
-import { ProductForm } from '../types/ProductForm';
-import { TextField } from '@/components/form/text-field';
-import { ProductPricesField } from '../components/ProductPricesField';
 import { products } from '@/routes';
+import { create as createProductRoute } from '@/routes/products';
+
+import { ProductPricesField } from '../components/ProductPricesField';
+import type { ProductForm } from '../types/ProductForm';
+import type { PriceTypeOption } from '../types/ProductPrice';
 
 type CreatePageProps = {
     priceTypes: PriceTypeOption[];

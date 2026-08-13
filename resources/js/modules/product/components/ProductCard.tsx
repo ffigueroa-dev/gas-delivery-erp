@@ -1,4 +1,8 @@
+import { Link } from '@inertiajs/react';
+import { Pen, Trash } from 'lucide-react';
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -6,14 +10,10 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { edit } from '@/routes/products';
 import { formatCurrency } from '@/utils/formatCurrency';
 import type { Product } from '../types/Product';
-import { Button } from '@/components/ui/button';
-import { Pen, Trash } from 'lucide-react';
-import { useState } from 'react';
 import { DeleteProductDialog } from './DeleteProductDialog';
-import { Link } from '@inertiajs/react';
-import { edit } from '@/routes/products';
 
 interface ProductCardProps {
     product: Product;
