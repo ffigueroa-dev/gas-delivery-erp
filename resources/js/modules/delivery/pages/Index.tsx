@@ -1,8 +1,11 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
-import { index as deliveriesRoute } from '@/routes/deliveries';
+import {
+    create as createDelivery,
+    index as deliveriesRoute,
+} from '@/routes/deliveries';
 import { DeliveryCard } from '../components/DeliveryCard';
 import type { Delivery } from '../types/Delivery';
 
@@ -13,7 +16,6 @@ interface IndexPageProps {
 }
 
 const Index = ({ deliveries }: IndexPageProps) => {
-
     return (
         <>
             <Head title="Deliveries" />
@@ -22,9 +24,11 @@ const Index = ({ deliveries }: IndexPageProps) => {
                     title="Deliveries"
                     description="Manage your deliveries"
                 >
-                    <Button disabled size="icon">
+                    <Button size="icon" asChild>
+                        <Link href={createDelivery()}>
                             <Plus />
                             <span className="sr-only">Create Delivery</span>
+                        </Link>
                     </Button>
                 </PageHeader>
 
