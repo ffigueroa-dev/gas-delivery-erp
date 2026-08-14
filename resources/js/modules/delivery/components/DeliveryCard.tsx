@@ -4,18 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 import type { Delivery } from '../types/Delivery';
+import { Link } from '@inertiajs/react';
+import { edit as editDeliveryRoute } from '@/routes/deliveries';
 
 interface DeliveryCardProps {
     delivery: Delivery;
-    onEdit?: (delivery: Delivery) => void;
     onDelete?: (delivery: Delivery) => void;
 }
 
-export const DeliveryCard = ({
-    delivery,
-    onEdit,
-    onDelete,
-}: DeliveryCardProps) => {
+export const DeliveryCard = ({ delivery, onDelete }: DeliveryCardProps) => {
     return (
         <Card className="transition-shadow hover:shadow-md">
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
@@ -34,9 +31,11 @@ export const DeliveryCard = ({
             </CardHeader>
 
             <CardFooter className="flex items-center justify-between">
-                <Button variant="secondary" onClick={() => onEdit?.(delivery)}>
-                    <Pen />
-                    <span>Edit</span>
+                <Button variant="secondary" asChild>
+                    <Link href={editDeliveryRoute(delivery.id)}>
+                        <Pen />
+                        <span>Edit</span>
+                    </Link>
                 </Button>
 
                 <Button
