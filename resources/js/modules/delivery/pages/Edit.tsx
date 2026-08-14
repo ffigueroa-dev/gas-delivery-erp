@@ -1,32 +1,34 @@
-import { PageHeader } from '@/components/page-header';
-import deliveries, {
-    create as createDelivery,
-    store as storeDelivery,
-} from '@/routes/deliveries';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { Delivery } from '../types/Delivery';
+import { UpdateDeliveryForm } from '../types/DeliveryForm';
 import { SubmitEvent } from 'react';
-import { DeliveryForm } from '../types/DeliveryForm';
+import deliveries, { update as updateDeliveryRoute } from '@/routes/deliveries';
+import { PageHeader } from '@/components/page-header';
 import { TextField } from '@/components/form/text-field';
-import { PasswordField } from '@/components/form/password-field';
 import { Button } from '@/components/ui/button';
 
-const Create = () => {
-    const form = useForm<DeliveryForm>({
-        name: '',
-        email: '',
-        password: '',
+type EditPageProps = {
+    delivery: {
+        data: Delivery;
+    };
+};
+const Edit = ({ delivery }: EditPageProps) => {
+    const form = useForm<UpdateDeliveryForm>({
+        name: delivery.data.name,
+        email: delivery.data.email,
     });
     const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        form.post(storeDelivery().url);
+        form.patch(updateDeliveryRoute(delivery.data.id).url);
     };
+
     return (
         <>
             <Head />
             <div className="p-6">
                 <PageHeader
                     title="Deliveries"
-                    description="Create a new delivery"
+                    description="Update delivery"
                 />
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <TextField
@@ -45,16 +47,10 @@ const Create = () => {
                         placeholder="Please enter delivery email"
                         onChange={(v) => form.setData('email', v)}
                     />
-                    <PasswordField
-                        id="delivery-password"
-                        label="Password"
-                        value={form.data.password}
-                        error={form.errors.password}
-                        onChange={(value) => form.setData('password', value)}
-                    />
+
                     <div className="flex items-center justify-end gap-4">
                         <Button type="submit" disabled={form.processing}>
-                            Create
+                            Update
                         </Button>
                         <Button variant={'secondary'} asChild>
                             <Link href={deliveries.index()}>Cancel</Link>
@@ -66,13 +62,12 @@ const Create = () => {
     );
 };
 
-Create.layout = {
+Edit.layout = {
     breadcrumbs: [
         {
-            title: 'Create Delivery',
-            href: createDelivery(),
+            title: 'Edit delivery',
         },
     ],
 };
 
-export default Create;
+export default Edit;

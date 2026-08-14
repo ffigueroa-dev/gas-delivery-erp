@@ -3,7 +3,9 @@
 namespace App\Modules\Delivery\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Modules\Delivery\Http\Requests\StoreDeliveryRequest;
+use App\Modules\Delivery\Http\Requests\UpdateDeliveryRequest;
 use App\Modules\Delivery\Http\Resources\DeliveryResource;
 use App\Modules\Delivery\Services\DeliveryServices;
 use App\Support\Toast;
@@ -52,6 +54,32 @@ class DeliveryController extends Controller
             Toast::error('Failed to create a new delivery');
             return redirect()
                 ->back();
+        }
+    }
+
+    public function edit(User $delivery): Response
+    {
+        return Inertia::render('delivery/Edit', [
+            'delivery' => new DeliveryResource($delivery)
+        ]);
+    }
+
+    public function update(User $delivery, UpdateDeliveryRequest $request): RedirectResponse
+    {
+        try {
+            $data =  $request->validated();
+            $this->deliveryService->update($delivery, $data);
+            Toast::success('Delivery updated successfully');
+            return redirect()
+                ->route('deliveries.index');
+        } catch (\Throwable $th) {
+            Log::error('Error updating delivery', [
+                'error' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'data' => $request->validated()
+            ]);
+            Toast::error('There was an error updating the delivery');
+            return redirect()->back();
         }
     }
 }
