@@ -10,4 +10,5 @@ Route::prefix('/deliveries')->group(function () {
 
     Route::get('/{delivery}/edit', [DeliveryController::class, 'edit'])->name('deliveries.edit');
     Route::patch('/{delivery}/update', [DeliveryController::class, 'update'])->name('deliveries.update');
+    Route::delete('/{delivery}', [DeliveryController::class, 'delete'])->name('deliveries.delete');
 });
