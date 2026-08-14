@@ -82,4 +82,21 @@ class DeliveryController extends Controller
             return redirect()->back();
         }
     }
+
+    public function delete(User $delivery): RedirectResponse
+    {
+        try {
+            $this->deliveryService->delete($delivery);
+            Toast::success('Delivery deleted successfully');
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            Log::error('Error deleting delivery', [
+                'error' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'data' => $delivery
+            ]);
+            Toast::error('There was an error deleting the delivery');
+            return redirect()->back();
+        }
+    }
 }

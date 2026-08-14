@@ -3,6 +3,7 @@
 namespace App\Modules\Delivery\Services;
 
 use App\Models\User;
+use App\Modules\Delivery\Actions\DeleteDelivery;
 use App\Modules\Delivery\Actions\ListDeliveries;
 use App\Modules\Delivery\Actions\StoreDelivery;
 use App\Modules\Delivery\Actions\UpdateDelivery;
@@ -13,14 +14,18 @@ class DeliveryServices
     protected $listDeliveries;
     protected $storeDelivery;
     protected $updateDelivery;
+    protected $deleteDelivery;
+
     public function __construct(
         ListDeliveries $listDeliveries,
         StoreDelivery $storeDelivery,
-        UpdateDelivery $updateDelivery
+        UpdateDelivery $updateDelivery,
+        DeleteDelivery $deleteDelivery
     ) {
         $this->listDeliveries = $listDeliveries;
         $this->storeDelivery = $storeDelivery;
         $this->updateDelivery = $updateDelivery;
+        $this->deleteDelivery = $deleteDelivery;
     }
 
     public function listDeliveries(): Collection
@@ -36,5 +41,10 @@ class DeliveryServices
     public function update(User $delivery, array $data): User
     {
         return $this->updateDelivery->execute($delivery, $data);
+    }
+
+    public function delete(User $delivery): User
+    {
+        return $this->deleteDelivery->execute($delivery);
     }
 }

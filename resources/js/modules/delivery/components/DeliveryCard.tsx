@@ -6,13 +6,15 @@ import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Delivery } from '../types/Delivery';
 import { Link } from '@inertiajs/react';
 import { edit as editDeliveryRoute } from '@/routes/deliveries';
+import { DeleteDeliveryDialog } from './DeleteDeliveryDialog';
+import { useState } from 'react';
 
 interface DeliveryCardProps {
     delivery: Delivery;
-    onDelete?: (delivery: Delivery) => void;
 }
 
-export const DeliveryCard = ({ delivery, onDelete }: DeliveryCardProps) => {
+export const DeliveryCard = ({ delivery }: DeliveryCardProps) => {
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     return (
         <Card className="transition-shadow hover:shadow-md">
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
@@ -40,12 +42,17 @@ export const DeliveryCard = ({ delivery, onDelete }: DeliveryCardProps) => {
 
                 <Button
                     variant="destructive"
-                    onClick={() => onDelete?.(delivery)}
+                    onClick={() => setDeleteDialogOpen(true)}
                 >
                     <Trash />
                     <span>Delete</span>
                 </Button>
             </CardFooter>
+            <DeleteDeliveryDialog
+                isOpen={deleteDialogOpen}
+                delivery={delivery}
+                setIsOpen={setDeleteDialogOpen}
+            />
         </Card>
     );
 };
