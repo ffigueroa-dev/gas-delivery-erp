@@ -93,4 +93,24 @@ class ClientController extends Controller
             return redirect()->back();
         }
     }
+
+    public function delete(Client $client): RedirectResponse
+    {
+        try {
+            $this->clientService->deleteClient($client);
+            Toast::success('Client deleted successfully');
+
+            return redirect()
+                ->route('clients.index');
+        } catch (\Throwable $th) {
+            Log::error('Error deleting client', [
+                'error' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'data' => $client
+            ]);
+            Toast::error('There was an error deleting the client');
+            return redirect()->back();
+        }
+    }
+
 }

@@ -12,11 +12,15 @@ import { MapPin, Pen, Phone, Trash } from 'lucide-react';
 import { TruncatedText } from '@/components/common/truncated-text';
 import { Link } from '@inertiajs/react';
 import { edit } from '@/routes/clients';
+import { DeletClientDialog } from './DeleteClientDialog';
+import { useState } from 'react';
 
 interface ProductCardProps {
     client: Client;
 }
 export const ClientCard = ({ client }: ProductCardProps) => {
+    const [deleteClientDialogOpen, setDeleteClientDialogOpen] =
+        useState<boolean>(false);
     return (
         <Card className="w-full max-w-sm transition-shadow hover:shadow-md">
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
@@ -81,11 +85,19 @@ export const ClientCard = ({ client }: ProductCardProps) => {
                         <span>Edit</span>
                     </Link>
                 </Button>
-                <Button variant={'destructive'}>
+                <Button
+                    variant={'destructive'}
+                    onClick={() => setDeleteClientDialogOpen(true)}
+                >
                     <Trash />
                     <span>Delete</span>
                 </Button>
             </CardFooter>
+            <DeletClientDialog
+                client={client}
+                isOpen={deleteClientDialogOpen}
+                setIsOpen={setDeleteClientDialogOpen}
+            />
         </Card>
     );
 };
