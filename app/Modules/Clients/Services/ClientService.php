@@ -2,6 +2,7 @@
 
 namespace App\Modules\Clients\Services;
 
+use App\Modules\Clients\Actions\DeleteClient;
 use App\Modules\Clients\Actions\ListClients;
 use App\Modules\Clients\Actions\StoreClient;
 use App\Modules\Clients\Actions\UpdateClient;
@@ -14,6 +15,7 @@ class ClientService
         protected ListClients $listClients,
         protected StoreClient $storeClient,
         protected UpdateClient $updateClient,
+        protected DeleteClient $deleteClient,
     ) {}
 
     public function listClients(): Collection
@@ -27,5 +29,9 @@ class ClientService
     public function updateClient(Client $client, array $data)
     {
         return $this->updateClient->execute($client, $data);
+    }
+    public function deleteClient(Client $client): Client
+    {
+        return $this->deleteClient->execute($client);
     }
 }

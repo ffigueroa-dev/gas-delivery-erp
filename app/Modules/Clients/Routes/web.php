@@ -11,4 +11,5 @@ Route::prefix('clients')->group(function () {
     Route::post('/', [ClientController::class, 'store'])->name('clients.store');
     Route::get('/{client}', [ClientController::class, 'edit'])->name('clients.edit');
     Route::patch('/{client}', [ClientController::class, 'update'])->name('clients.update');
+    Route::delete('/{client}', [ClientController::class, 'delete'])->name('clients.delete');
 });
