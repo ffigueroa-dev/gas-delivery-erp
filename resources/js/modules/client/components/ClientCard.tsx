@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Pen, Phone, Trash } from 'lucide-react';
 import { TruncatedText } from '@/components/common/truncated-text';
+import { Link } from '@inertiajs/react';
+import { edit } from '@/routes/clients';
+
 interface ProductCardProps {
     client: Client;
 }
@@ -71,10 +74,12 @@ export const ClientCard = ({ client }: ProductCardProps) => {
                     </Badge>
                 </div>
             </CardContent>
-            <CardFooter className="flex items-center justify-between mt-auto">
-                <Button>
-                    <Pen />
-                    <span>Edit</span>
+            <CardFooter className="mt-auto flex items-center justify-between">
+                <Button asChild>
+                    <Link href={edit(client.id)}>
+                        <Pen />
+                        <span>Edit</span>
+                    </Link>
                 </Button>
                 <Button variant={'destructive'}>
                     <Trash />

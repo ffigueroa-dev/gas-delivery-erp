@@ -12,6 +12,7 @@ import { ProductPricesField } from '../components/ProductPricesField';
 import type { Product } from '../types/Product';
 import type { UpdateProductForm, ProductPriceForm } from '../types/ProductForm';
 import type { PriceTypeOption } from '../types/ProductPrice';
+import { SwitchField } from '@/components/form/switch-field';
 
 type EditPageProps = {
     product: {
@@ -68,30 +69,14 @@ const Edit = ({ product, priceTypes }: EditPageProps) => {
                         placeholder="Please enter product description"
                         onChange={(value) => form.setData('description', value)}
                     />
-                    <Field>
-                        <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
-                            <div className="space-y-1">
-                                <FieldLabel htmlFor="product-active">
-                                    Active product
-                                </FieldLabel>
-
-                                <p className="text-sm text-muted-foreground">
-                                    Inactive products won't be available for new
-                                    sales.
-                                </p>
-                            </div>
-
-                            <Switch
-                                id="product-active"
-                                checked={form.data.active}
-                                onCheckedChange={(checked) =>
-                                    form.setData('active', checked)
-                                }
-                            />
-                        </div>
-
-                        <InputError message={form.errors.active} />
-                    </Field>
+                    <SwitchField
+                        id="product-active"
+                        label="Active product"
+                        description="Inactive products won't be available for new sales."
+                        checked={form.data.active}
+                        onChange={(checked) => form.setData('active', checked)}
+                        error={form.errors.active}
+                    />
                     <ProductPricesField
                         options={priceTypes}
                         prices={form.data.prices}
