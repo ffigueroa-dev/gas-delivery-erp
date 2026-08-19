@@ -31,7 +31,7 @@ const Index = ({ clients }: IndexPageProps) => {
 
                 <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {clients.data.map((c) => (
-                        <ClientCard client={c} />
+                        <ClientCard client={c} key={c.id}/>
                     ))}
                 </div>
             </div>
