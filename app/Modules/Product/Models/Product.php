@@ -2,9 +2,12 @@
 
 namespace App\Modules\Product\Models;
 
+use App\Modules\Clients\Enums\ClientType;
+use App\Modules\Product\Enums\PriceType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\Product\Models\ProductPrice;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -32,5 +35,23 @@ class Product extends Model
     public function prices(): HasMany
     {
         return $this->hasMany(ProductPrice::class);
+    }
+
+    public function getPriceForClientType(ClientType $clientType): ProductPrice
+    {
+        $price = $this->prices
+            ->firstWhere('type', $clientType->value);
+
+        if ($price) {
+            return $price;
+        }
+
+        return $this->prices
+            ->firstWhere('type', PriceType::RETAIL->value);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('active', true);
     }
 }

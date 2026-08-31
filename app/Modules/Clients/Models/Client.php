@@ -3,6 +3,7 @@
 namespace App\Modules\Clients\Models;
 
 use App\Modules\Clients\Enums\ClientType;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Override;
@@ -25,5 +26,10 @@ class Client extends Model
         return [
             'type' => ClientType::class,
         ];
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('active', true);
     }
 }

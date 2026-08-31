@@ -1,6 +1,6 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Order } from '../types/Order';
-import orders from '@/routes/orders';
+import * as ordersRoute from '@/routes/orders';
 import { PageHeader } from '@/components/page-header';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -21,10 +21,10 @@ const Index = ({ orders }: IndexPageProps) => {
             <div className="p-6">
                 <PageHeader title="Clients" description="Manage your clients">
                     <Button size={'icon'}>
-                        {/* <Link href={}> */}
+                        <Link href={ordersRoute.create()}>
                         <Plus />
                         <span className="sr-only">Create Order</span>
-                        {/* </Link> */}
+                        </Link>
                     </Button>
                 </PageHeader>
 
@@ -42,7 +42,7 @@ Index.layout = {
     breadcrumbs: [
         {
             title: 'Orders',
-            href: orders.index(),
+            href: ordersRoute.index(),
         },
     ],
 };

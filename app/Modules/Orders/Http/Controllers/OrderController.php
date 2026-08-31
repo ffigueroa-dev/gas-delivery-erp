@@ -2,11 +2,24 @@
 
 namespace App\Modules\Orders\Http\Controllers;
 
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Modules\Clients\Http\Resources\ClientResource;
+use App\Modules\Clients\Models\Client;
+use App\Modules\Delivery\Http\Resources\DeliveryResource;
+use App\Modules\Orders\Http\Requests\StoreOrderRequest;
 use App\Modules\Orders\Http\Resources\OrderResource;
 use App\Modules\Orders\Services\OrderService;
+use App\Modules\Product\Http\Resources\ProductResource;
+use App\Modules\Product\Models\Product;
+use App\Support\Toast;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
+
 
 class OrderController extends Controller
 {
@@ -20,5 +33,56 @@ class OrderController extends Controller
         return Inertia::render('order/Index', [
             'orders' => OrderResource::collection($orders)
         ]);
+    }
+
+    public function create(): Response
+    {
+        $products = Product::query()
+            ->active()
+            ->with('prices')
+            ->get();
+
+        $clients = Client::query()
+            ->active()
+            ->get()
+            ->map(fn($client) => [
+                'value' => $client->id,
+                'label' => $client->name
+            ]);
+
+        $deliveries = User::query()
+            ->role(Role::DELIVERY->value)
+            ->get()
+            ->map(fn($delivery) => [
+                'value' => $delivery->id,
+                'label' => $delivery->name
+            ]);
+
+        return Inertia::render('order/Create', [
+            'products' => ProductResource::collection($products),
+            'dropdowns' => [
+                'clients' => $clients,
+                'deliveries' => $deliveries,
+            ],
+        ]);
+    }
+
+    public function store(StoreOrderRequest $request): RedirectResponse
+    {
+        try {
+            $data =  $request->validated();
+            $this->orderService->store($data);
+            Toast::success('Order created successfully');
+
+            return redirect()->route('orders.index');
+        } catch (\Throwable $th) {
+            Log::error('Failed to store order', [
+                'error' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'data' => $request->validated()
+            ]);
+            Toast::error('There was an error creating order. Please try again later');
+            return redirect()->back();
+        }
     }
 }
