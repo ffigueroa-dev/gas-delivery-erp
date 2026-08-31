@@ -2,17 +2,77 @@
 
 namespace App\Modules\Orders\Services;
 
+use App\Modules\Clients\Models\Client;
 use App\Modules\Orders\Actions\ListOrders;
+use App\Modules\Orders\Actions\StoreOrder;
+use App\Modules\Orders\Actions\StoreOrderProduct;
+use App\Modules\Orders\Models\Order;
+use App\Modules\Product\Models\Product;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
     public function __construct(
         protected ListOrders $listOrders,
+        protected StoreOrderProduct $storeOrderProduct,
+        protected StoreOrder $storeOrder,
     ) {}
 
     public function listOrders(): Collection
     {
         return $this->listOrders->execute();
+    }
+
+    public function store(array $data): Order
+    {
+        return DB::transaction(function () use ($data) {
+            $client = Client::findOrFail($data['client_id']);
+
+            $products = Product::query()
+                ->whereIn(
+                    'id',
+                    collect($data['products'])->pluck('id')
+                )
+                ->with('prices')
+                ->get()
+                ->keyBy('id');
+
+            $items = [];
+            $total = 0;
+
+            foreach ($data['products'] as $item) {
+                $product = $products[$item['id']];
+
+                $price = $product->getPriceForClientType($client->type);
+
+                $subtotal = $price->amount * $item['quantity'];
+
+                $items[] = [
+                    'product_id' => $product->id,
+                    'current_price' => $price->amount,
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $subtotal,
+                ];
+
+                $total += $subtotal;
+            }
+
+            $order = $this->storeOrder->execute([
+                'client_id' => $client->id,
+                'delivery_id' => $data['delivery_id'],
+                'notes' => $data['notes'] ?? null,
+                'total_amount' => $total,
+            ]);
+
+            foreach ($items as $item) {
+                $this->storeOrderProduct->execute([
+                    ...$item,
+                    'order_id' => $order->id,
+                ]);
+            }
+
+            return $order->load('orderProducts');
+        });
     }
 }
