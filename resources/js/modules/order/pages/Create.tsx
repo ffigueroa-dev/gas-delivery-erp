@@ -33,8 +33,6 @@ const Create = ({ products, dropdowns }: CreatePageProps) => {
         form.post(orders.store().url);
     };
 
-    console.log(form.errors);
-
     return (
         <>
             <Head title="Create Order" />
