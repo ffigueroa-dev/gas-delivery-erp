@@ -5,11 +5,10 @@ namespace App\Modules\Orders\Http\Controllers;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Modules\Clients\Http\Resources\ClientResource;
 use App\Modules\Clients\Models\Client;
-use App\Modules\Delivery\Http\Resources\DeliveryResource;
 use App\Modules\Orders\Http\Requests\StoreOrderRequest;
 use App\Modules\Orders\Http\Resources\OrderResource;
+use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Services\OrderService;
 use App\Modules\Product\Http\Resources\ProductResource;
 use App\Modules\Product\Models\Product;
@@ -17,6 +16,7 @@ use App\Support\Toast;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -82,6 +82,31 @@ class OrderController extends Controller
                 'data' => $request->validated()
             ]);
             Toast::error('There was an error creating order. Please try again later');
+            return redirect()->back();
+        }
+    }
+
+    public function cancel(Order $order): RedirectResponse
+    {
+        try {
+            $this->orderService->cancel($order);
+
+            Toast::success('Order cancelled successfully');
+
+            return redirect()->back();
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Throwable $th) {
+            Log::error('Failed to cancel order', [
+                'error' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'order_id' => $order->id,
+            ]);
+
+            Toast::error(
+                'There was an error cancelling the order. Please try again later'
+            );
+
             return redirect()->back();
         }
     }
