@@ -19,3 +19,10 @@ export interface Order {
     created_at: string;
     updated_at: string;
 }
+
+export enum OrderStatusEnum {
+    PENDING = 'pending',
+    CANCELLED = 'cancelled',
+    DELIVERED = 'delivered'
+
+}

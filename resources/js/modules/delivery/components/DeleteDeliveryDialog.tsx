@@ -28,6 +28,7 @@ export const DeleteDeliveryDialog = ({
         router.delete(deleteMethod({ id: delivery.id }).url, {
             onSuccess: (d) => console.log(d),
         });
+        setIsOpen(false);
     };
 
     return (

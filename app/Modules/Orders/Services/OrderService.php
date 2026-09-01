@@ -3,13 +3,16 @@
 namespace App\Modules\Orders\Services;
 
 use App\Modules\Clients\Models\Client;
+use App\Modules\Orders\Actions\CancelOrder;
 use App\Modules\Orders\Actions\ListOrders;
 use App\Modules\Orders\Actions\StoreOrder;
 use App\Modules\Orders\Actions\StoreOrderProduct;
+use App\Modules\Orders\Enums\OrderStatus;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Product\Models\Product;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class OrderService
 {
@@ -17,6 +20,7 @@ class OrderService
         protected ListOrders $listOrders,
         protected StoreOrderProduct $storeOrderProduct,
         protected StoreOrder $storeOrder,
+        protected CancelOrder $cancelOrder,
     ) {}
 
     public function listOrders(): Collection
@@ -74,5 +78,16 @@ class OrderService
 
             return $order->load('orderProducts');
         });
+    }
+
+    public function cancel(Order $order): Order
+    {
+        if ($order->status !== OrderStatus::PENDING) {
+        throw ValidationException::withMessages([
+            'order' => 'Only pending orders can be cancelled.',
+        ]);
+    }
+
+        return $this->cancelOrder->execute($order);
     }
 }

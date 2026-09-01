@@ -13,7 +13,7 @@ type IndexPageProps = {
 };
 
 const Index = ({ orders }: IndexPageProps) => {
-    console.log(orders);
+
 
     return (
         <>
@@ -22,15 +22,18 @@ const Index = ({ orders }: IndexPageProps) => {
                 <PageHeader title="Clients" description="Manage your clients">
                     <Button size={'icon'}>
                         <Link href={ordersRoute.create()}>
-                        <Plus />
-                        <span className="sr-only">Create Order</span>
+                            <Plus />
+                            <span className="sr-only">Create Order</span>
                         </Link>
                     </Button>
                 </PageHeader>
 
                 <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {orders.data.map((o) => (
-                        <OrderCard order={o} key={o.id} />
+                        <OrderCard
+                            order={o}
+                            key={o.id}
+                        />
                     ))}
                 </div>
             </div>

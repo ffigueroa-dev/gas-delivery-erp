@@ -10,7 +10,9 @@ import {
 } from '@/components/ui/card';
 import { Package, Pen, Truck, User, X } from 'lucide-react';
 
-import type { Order } from '../types/Order';
+import { OrderStatusEnum, type Order } from '../types/Order';
+import { useState } from 'react';
+import { CancelOrderDialog } from './CancelOrderDialog';
 
 interface OrderCardProps {
     order: Order;
@@ -23,6 +25,8 @@ const statusVariant = {
 } as const;
 
 export const OrderCard = ({ order }: OrderCardProps) => {
+    const [openCancelDialog, setOpenCancelDialog] = useState<boolean>(false);
+    const canCancel = order.status === OrderStatusEnum.PENDING;
     return (
         <Card className="w-full max-w-sm transition-shadow hover:shadow-md">
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
@@ -118,11 +122,20 @@ export const OrderCard = ({ order }: OrderCardProps) => {
                     <span>Edit</span>
                 </Button>
 
-                <Button variant="destructive">
+                <Button
+                    variant="destructive"
+                    onClick={() => setOpenCancelDialog(true)}
+                    disabled={!canCancel}
+                >
                     <X />
                     <span>Cancel</span>
                 </Button>
             </CardFooter>
+            <CancelOrderDialog
+                isOpen={openCancelDialog}
+                order={order}
+                setIsOpen={setOpenCancelDialog}
+            />
         </Card>
     );
 };
