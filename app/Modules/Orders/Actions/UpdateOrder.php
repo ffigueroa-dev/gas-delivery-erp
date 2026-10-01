@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Actions;
 use App\Modules\Orders\Actions\StoreOrderProduct;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Product\Models\Product;
+use BcMath\Number;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -36,11 +37,49 @@ class UpdateOrder
                 $order,
                 $products['new']
             );
-
+            $totalAmount = $this->getTotalOrderAmount($order, $data['products']);;
+            $order->update([
+                'client_id' => $data['client_id'],
+                'delivery_id' => $data['delivery_id'],
+                'notes' => $data['notes'] ?? null,
+                'total_amount' => $totalAmount,
+            ]);
             return $order->fresh();
         });
     }
 
+    public function getTotalOrderAmount(Order $order, array $products): string
+    {
+        $productIds = array_map(
+            fn($product) => $product['id'],
+            $products
+        );
+
+        $productsFromDatabase = Product::query()
+            ->whereIn('id', $productIds)
+            ->get();
+
+        $client = $order->client;
+
+        $total = 0;
+
+        foreach ($productsFromDatabase as $product) {
+            $productData = array_find(
+                $products,
+                fn($productData) => $productData['id'] === $product->id
+            );
+
+            $quantity = $productData['quantity'];
+
+            $price = $product
+                ->getPriceForClientType($client->type)
+                ->amount;
+
+            $total += $price * $quantity;
+        }
+
+        return number_format($total, 2, '.', '');
+    }
     public function updateExistingProducts(Order $order, array $products): void
     {
         $productIds = array_map(
@@ -139,37 +178,37 @@ class UpdateOrder
     }
 
     private function separateProducts(Order $order, array $products): array
-{
-    $existingProducts = $order->orderProducts()
-        ->get()
-        ->keyBy('product_id');
+    {
+        $existingProducts = $order->orderProducts()
+            ->get()
+            ->keyBy('product_id');
 
-    $incomingProducts = collect($products)
-        ->keyBy('id');
+        $incomingProducts = collect($products)
+            ->keyBy('id');
 
-    $new = [];
-    $updated = [];
-    $removed = [];
+        $new = [];
+        $updated = [];
+        $removed = [];
 
-    foreach ($incomingProducts as $productId => $productData) {
-        if (!$existingProducts->has($productId)) {
-            $new[] = $productData;
-            continue;
+        foreach ($incomingProducts as $productId => $productData) {
+            if (!$existingProducts->has($productId)) {
+                $new[] = $productData;
+                continue;
+            }
+
+            $updated[] = $productData;
         }
 
-        $updated[] = $productData;
-    }
-
-    foreach ($existingProducts as $productId => $orderProduct) {
-        if (!$incomingProducts->has($productId)) {
-            $removed[] = $productId;
+        foreach ($existingProducts as $productId => $orderProduct) {
+            if (!$incomingProducts->has($productId)) {
+                $removed[] = $productId;
+            }
         }
-    }
 
-    return [
-        'new' => $new,
-        'updated' => $updated,
-        'removedProductIds' => $removed,
-    ];
-}
+        return [
+            'new' => $new,
+            'updated' => $updated,
+            'removedProductIds' => $removed,
+        ];
+    }
 }
