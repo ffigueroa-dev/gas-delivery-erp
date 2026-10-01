@@ -111,6 +111,31 @@ class OrderController extends Controller
             return redirect()->back();
         }
     }
+    public function deliver(Order $order): RedirectResponse
+    {
+        try {
+            $this->orderService->cancel($order);
+
+            Toast::success('Order delivered successfully');
+
+            return redirect()
+                ->route('orders.index');
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Throwable $th) {
+            Log::error('Failed to deliver order', [
+                'error' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'order_id' => $order->id,
+            ]);
+
+            Toast::error(
+                'There was an error delivering the order. Please try again later'
+            );
+
+            return redirect()->back();
+        }
+    }
 
     public function edit(Order $order): Response
     {
@@ -170,7 +195,7 @@ class OrderController extends Controller
             $this->orderService->update($order, $data);
             Toast::success('Order updated successfully');
             return redirect()
-                ->route('orders.index');
+                ->route('orders.detail', ['order' => $order]);
         } catch (\Throwable $th) {
             Log::error('Error updating prodcut', [
                 'error' => $th->getMessage(),
@@ -191,6 +216,6 @@ class OrderController extends Controller
             'delivery',
             'orderProducts.product',
         ]);;
-        return Inertia::render('order/Detail', ['order'=> new OrderResource($orderData)]);
+        return Inertia::render('order/Detail', ['order' => new OrderResource($orderData)]);
     }
 }
