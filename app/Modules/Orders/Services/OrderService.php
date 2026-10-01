@@ -4,6 +4,7 @@ namespace App\Modules\Orders\Services;
 
 use App\Modules\Clients\Models\Client;
 use App\Modules\Orders\Actions\CancelOrder;
+use App\Modules\Orders\Actions\DeliverOrder;
 use App\Modules\Orders\Actions\ListOrders;
 use App\Modules\Orders\Actions\StoreOrder;
 use App\Modules\Orders\Actions\StoreOrderProduct;
@@ -22,6 +23,7 @@ class OrderService
         protected StoreOrderProduct $storeOrderProduct,
         protected StoreOrder $storeOrder,
         protected CancelOrder $cancelOrder,
+        protected DeliverOrder $deliverOrder,
         protected UpdateOrder $updateOrder,
     ) {}
 
@@ -85,15 +87,25 @@ class OrderService
     public function cancel(Order $order): Order
     {
         if ($order->status !== OrderStatus::PENDING) {
-        throw ValidationException::withMessages([
-            'order' => 'Only pending orders can be cancelled.',
-        ]);
-    }
+            throw ValidationException::withMessages([
+                'order' => 'Only pending orders can be cancelled.',
+            ]);
+        }
 
         return $this->cancelOrder->execute($order);
     }
+    public function deliver(Order $order): Order
+    {
+        if ($order->status !== OrderStatus::PENDING) {
+            throw ValidationException::withMessages([
+                'order' => 'Only pending orders can be cancelled.',
+            ]);
+        }
 
-    public function update(Order $order, array $data):Order
+        return $this->deliverOrder->execute($order);
+    }
+
+    public function update(Order $order, array $data): Order
     {
         return $this->updateOrder->execute($order, $data);
     }

@@ -6,6 +6,7 @@ import OrderDelivery from '../components/OrderDelivery';
 import OrderInformation from '../components/OrderInformation';
 import OrderProducts from '../components/OrderProducts';
 import { Order } from '../types/Order';
+import { OrderActions } from '../components/OrderActions';
 
 type DetailPageProps = {
     order: {
@@ -37,6 +38,8 @@ const Detail = ({ order }: DetailPageProps) => {
                     products={data.products}
                     totalAmount={data.total_amount}
                 />
+
+                <OrderActions order={order} />
             </div>
         </>
     );
