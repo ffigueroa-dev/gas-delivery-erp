@@ -12,3 +12,10 @@ export type CreateOrderForm = {
     products: OrderProductFormItem[];
 };
 
+export type UpdateOrderForm = {
+    client_id: UUID;
+    delivery_id: UUID;
+    notes: string;
+    products: OrderProductFormItem[];
+};
+

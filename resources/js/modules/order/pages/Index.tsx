@@ -19,7 +19,7 @@ const Index = ({ orders }: IndexPageProps) => {
         <>
             <Head title="Orders" />
             <div className="p-6">
-                <PageHeader title="Clients" description="Manage your clients">
+                <PageHeader title="Orders" description="Manage your Orders">
                     <Button size={'icon'}>
                         <Link href={ordersRoute.create()}>
                             <Plus />
