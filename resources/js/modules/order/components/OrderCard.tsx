@@ -8,7 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Package, Pen, Truck, User, X } from 'lucide-react';
+import { Eye, Package, Truck, User, X } from 'lucide-react';
 
 import { OrderStatusEnum, type Order } from '../types/Order';
 import { useState } from 'react';
@@ -120,9 +120,9 @@ export const OrderCard = ({ order }: OrderCardProps) => {
 
             <CardFooter className="mt-auto flex items-center justify-between">
                 <Button variant="secondary" asChild>
-                    <Link href={orders.edit(order.id)}>
-                        <Pen />
-                        <span>Edit</span>
+                    <Link href={orders.detail(order.id)}>
+                        <Eye />
+                        <span>See Details</span>
                     </Link>
                 </Button>
 
