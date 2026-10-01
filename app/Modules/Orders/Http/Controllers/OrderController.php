@@ -183,4 +183,14 @@ class OrderController extends Controller
                 ->back();
         }
     }
+
+    public function detail(Order $order): Response
+    {
+        $orderData = $order->load([
+            'client',
+            'delivery',
+            'orderProducts.product',
+        ]);;
+        return Inertia::render('order/Detail', ['order'=> new OrderResource($orderData)]);
+    }
 }
