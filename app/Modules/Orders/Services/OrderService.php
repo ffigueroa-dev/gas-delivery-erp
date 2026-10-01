@@ -7,6 +7,7 @@ use App\Modules\Orders\Actions\CancelOrder;
 use App\Modules\Orders\Actions\ListOrders;
 use App\Modules\Orders\Actions\StoreOrder;
 use App\Modules\Orders\Actions\StoreOrderProduct;
+use App\Modules\Orders\Actions\UpdateOrder;
 use App\Modules\Orders\Enums\OrderStatus;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Product\Models\Product;
@@ -21,6 +22,7 @@ class OrderService
         protected StoreOrderProduct $storeOrderProduct,
         protected StoreOrder $storeOrder,
         protected CancelOrder $cancelOrder,
+        protected UpdateOrder $updateOrder,
     ) {}
 
     public function listOrders(): Collection
@@ -89,5 +91,10 @@ class OrderService
     }
 
         return $this->cancelOrder->execute($order);
+    }
+
+    public function update(Order $order, array $data):Order
+    {
+        return $this->updateOrder->execute($order, $data);
     }
 }

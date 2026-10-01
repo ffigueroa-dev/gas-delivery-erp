@@ -13,6 +13,8 @@ import { Package, Pen, Truck, User, X } from 'lucide-react';
 import { OrderStatusEnum, type Order } from '../types/Order';
 import { useState } from 'react';
 import { CancelOrderDialog } from './CancelOrderDialog';
+import { Link } from '@inertiajs/react';
+import orders from '@/routes/orders';
 
 interface OrderCardProps {
     order: Order;
@@ -117,9 +119,11 @@ export const OrderCard = ({ order }: OrderCardProps) => {
             </CardContent>
 
             <CardFooter className="mt-auto flex items-center justify-between">
-                <Button variant="secondary">
-                    <Pen />
-                    <span>Edit</span>
+                <Button variant="secondary" asChild>
+                    <Link href={orders.edit(order.id)}>
+                        <Pen />
+                        <span>Edit</span>
+                    </Link>
                 </Button>
 
                 <Button
